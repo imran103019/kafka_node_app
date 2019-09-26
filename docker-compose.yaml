@@ -1,0 +1,22 @@
+version: '3'
+services:
+    producer:
+        build: producer
+        environment:
+            - KAFKA_BROKER=docker.for.mac.localhost:9092
+            - KAFKA_TOPIC=customer_topic
+            - KAFKA_CLIENT_ID=kafka_client_1 
+        volumes:
+          - ./producer/index.js:/producer_app/index.js       
+    consumer:
+        build: consumer
+        environment:
+            - KAFKA_BROKER=docker.for.mac.localhost:9092
+            - KAFKA_TOPIC=customer_topic
+            - KAFKA_MYSQL_CONNECTOR_TOPIC=dbserver1.inventory.customers
+            - KAFKA_CLIENT_ID=kafka_client_1
+            - KAFKA_GROUP_ID=kafka_group_1
+        volumes:
+          - ./consumer/index.js:/consumer_app/index.js    
+        depends_on:
+          - producer
